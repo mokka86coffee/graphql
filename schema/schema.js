@@ -5,7 +5,7 @@ const movies = generateRandomData(['id', 'name', 'genre'], 5);
 const directors = generateRandomData(['id', 'name', 'lastname'], 5);
 
 const graphql = require('graphql');
-const { GraphQLObjectType, GraphQLString, GraphQLSchema, GraphQLID } = graphql;
+const { GraphQLObjectType, GraphQLString, GraphQLSchema, GraphQLID, GraphQLList } = graphql;
 
 const MovieType = new GraphQLObjectType({
     name: 'Movie',
@@ -14,9 +14,9 @@ const MovieType = new GraphQLObjectType({
         name: { type: GraphQLString },
         genre: { type: GraphQLString },
         director: {
-            type: DirectorsType,
+            type: new GraphQLList(DirectorsType),
             resolve(parent, args){
-                return directors.find( ({id}) => id == parent.id )
+                return directors.filter( ({id}) => id != parent.id )
             }
         }
     })
